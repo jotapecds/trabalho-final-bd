@@ -1,6 +1,38 @@
 <?php
 include_once 'database.php';
 
+{   
+    # A ideia aqui era ler os dados do csv e popular a tabela de patrimonios, e com o 
+    # auxilio do trigger, popular o relacionamento patrimonio_esfera_do_gov
+
+    $file = fopen("patrimonios.csv", "r");
+    $row = 0;
+    $nome_bairro =  '';
+    while ($line = fgetcsv($file, 2000, ",")) {
+        if ($row++ < 2) {
+            continue;
+        }
+
+        if ($line[0] != null || $line[0] != '') 
+            $nome_bairro = $line[0];
+
+        $patrimonios[] = [
+            'nome_bairro' => $nome_bairro,
+            'nome' => $line[1],
+            'localizacao' => $line[2],
+        ];
+    }
+
+    foreach ($patrimonios as $patrimo)
+    {
+        print $patrimo['nome_bairro'].'<br>';
+        print $patrimo['nome'].'<br>';
+        print $patrimo['localizacao'].'<br>';
+        print '-----------------------<br>';
+    }
+    fclose($file);
+}
+
 $nome_patrimonio = $_POST["nome_patrimonio"];
 $endereco = $_POST["endereco"];
 $id_bairro = $_POST["id_bairro"];
